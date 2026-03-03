@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HayyanDesu — NihonGo VIP</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@300;400;700&family=Noto+Sans+JP:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --sakura:#f7c5cc;--sakura-deep:#e8829a;--sakura-dark:#c0566e;
+  --matcha:#6a9870;--gold:#b8922a;--gold-light:#d4a843;--torii:#c0392b;--wa:#25D366;
+  --washi:#fdf6f0;--washi-2:#f9efe6;--washi-3:#f2e6d9;--washi-dark:#e8d5c4;
+  --parchment:#fef9f4;--ink:#2c1a0e;--ink-soft:#5a3e2b;--ink-muted:#8a7060;--ink-faint:#b09880;
+  --border-sakura:rgba(224,130,154,0.25);
+  --shadow:rgba(44,26,14,0.08);
+  --vip-gold:#c9960c;--vip-gold-light:#f0c040;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--washi);color:var(--ink);font-family:'Noto Sans JP',sans-serif;font-weight:300;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--washi-3);}::-webkit-scrollbar-thumb{background:var(--sakura-deep);border-radius:3px;}
+
+/* ══ LOADER ══ */
+#loader{position:fixed;inset:0;background:var(--washi);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity .5s;}
+#loader.hide{opacity:0;pointer-events:none;}
+.lk{font-family:'Noto Serif JP',serif;font-size:80px;color:var(--sakura-dark);opacity:0;animation:ki .8s ease .3s forwards,kp 1s ease 1.1s forwards;text-shadow:0 0 40px rgba(224,130,154,.5);}
+@keyframes ki{to{opacity:1;}}@keyframes kp{to{transform:scale(1.15);opacity:0;}}
+.lt{font-family:'Noto Serif JP',serif;font-size:13px;color:var(--ink-muted);letter-spacing:6px;opacity:0;animation:ki .6s ease .9s forwards;}
+.lb{width:200px;height:1px;background:var(--washi-3);position:relative;overflow:hidden;}
+.lb::after{content:'';position:absolute;left:0;top:0;width:0;height:100%;background:linear-gradient(to right,var(--sakura-deep),var(--gold-light));animation:bf 1.8s ease .6s forwards;}
+@keyframes bf{to{width:100%;}}
+
+/* ══ LOGIN SCREEN ══ */
+#loginScreen{display:none;position:fixed;inset:0;z-index:200;background:linear-gradient(150deg,#fce8f0 0%,#fdf5e6 35%,#edf5e9 70%,#f0eaf7 100%);align-items:center;justify-content:center;flex-direction:column;overflow:hidden;}
+#loginScreen.show{display:flex;}
+#loginScreen::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 55%,rgba(247,197,204,.5) 0%,transparent 55%),radial-gradient(ellipse at 85% 20%,rgba(168,197,160,.35) 0%,transparent 50%),radial-gradient(ellipse at 55% 85%,rgba(139,123,171,.15) 0%,transparent 50%);}
+.gsun{position:absolute;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(247,197,204,.55) 0%,rgba(255,226,160,.18) 50%,transparent 70%);border:1px solid rgba(224,130,154,.2);top:50%;left:50%;transform:translate(-50%,-50%);animation:sp 7s ease-in-out infinite;box-shadow:0 0 120px rgba(247,197,204,.3);}
+@keyframes sp{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.85;}50%{transform:translate(-50%,-50%) scale(1.05);opacity:1;}}
+.gbk{position:absolute;font-family:'Noto Serif JP',serif;font-size:160px;color:rgba(192,57,43,.04);pointer-events:none;user-select:none;animation:bkf ease-in-out infinite;}
+@keyframes bkf{0%,100%{transform:translateY(0) rotate(var(--r));}50%{transform:translateY(-18px) rotate(var(--r));}}
+.petal{position:absolute;width:10px;height:10px;background:radial-gradient(ellipse at 40% 35%,#fff4f6,var(--sakura) 60%,var(--sakura-deep));border-radius:150% 0 150% 0;opacity:0;pointer-events:none;animation:pf linear infinite;}
+@keyframes pf{0%{opacity:0;transform:translateY(-20px) rotate(0deg) scale(.8);}10%{opacity:.55;}90%{opacity:.2;}100%{opacity:0;transform:translateY(110vh) rotate(720deg) scale(1.1);}}
+.gate-card{position:relative;z-index:2;background:rgba(253,249,244,.93);backdrop-filter:blur(20px);border:1px solid var(--border-sakura);width:100%;max-width:420px;padding:52px 44px;box-shadow:0 24px 80px rgba(44,26,14,.14);animation:gin .7s cubic-bezier(.22,1,.36,1) both;}
+@keyframes gin{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.gate-logo{text-align:center;margin-bottom:36px;}
+.gate-logo-jp{font-family:'Noto Serif JP',serif;font-size:44px;color:var(--ink);line-height:1;margin-bottom:6px;}
+.gate-logo-jp span{color:var(--sakura-dark);}
+.gate-logo-sub{font-family:'Crimson Pro',serif;font-style:italic;font-size:14px;color:var(--ink-muted);letter-spacing:4px;}
+.gate-divider{width:40px;height:1px;background:linear-gradient(to right,var(--sakura-deep),var(--gold-light));margin:0 auto 32px;}
+.gate-label{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;display:block;}
+.gate-field{width:100%;padding:13px 16px;background:var(--washi-2);border:1px solid var(--border-sakura);color:var(--ink);font-family:'Noto Sans JP',sans-serif;font-size:13px;outline:none;transition:border-color .25s,box-shadow .25s;margin-bottom:20px;}
+.gate-field:focus{border-color:var(--sakura-deep);box-shadow:0 0 0 3px rgba(232,130,154,.1);}
+.gate-field::placeholder{color:var(--ink-faint);}
+.gate-btn{width:100%;padding:15px;background:linear-gradient(135deg,var(--sakura-deep),var(--sakura-dark));border:none;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:12px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:filter .2s,transform .2s;margin-top:4px;position:relative;overflow:hidden;}
+.gate-btn:hover{filter:brightness(1.06);transform:translateY(-1px);}
+.gate-btn:active{transform:translateY(0);}
+.gate-error{display:none;padding:11px 15px;background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);border-left:3px solid var(--torii);color:var(--torii);font-size:12px;margin-bottom:18px;line-height:1.6;}
+.gate-error.show{display:block;}
+.gate-footer{text-align:center;margin-top:24px;padding-top:20px;border-top:1px solid var(--border-sakura);}
+.gate-footer p{font-size:11px;color:var(--ink-muted);line-height:1.8;}
+.gate-wa{display:inline-flex;align-items:center;gap:8px;margin-top:12px;padding:9px 20px;border:1px solid rgba(37,211,102,.3);color:var(--wa);font-size:11px;letter-spacing:2px;cursor:pointer;background:rgba(37,211,102,.04);transition:all .2s;text-decoration:none;}
+.gate-wa:hover{background:rgba(37,211,102,.1);}
+
+/* ══ APP ══ */
+#app{display:none;opacity:0;transition:opacity .5s;}
+#app.show{display:block;opacity:1;}
+
+/* ── NAV ── */
+nav{position:sticky;top:0;z-index:100;background:rgba(253,246,240,.95);backdrop-filter:blur(18px);border-bottom:1px solid var(--border-sakura);padding:0 40px;display:flex;align-items:center;height:64px;box-shadow:0 2px 20px var(--shadow);}
+.nav-logo{font-family:'Noto Serif JP',serif;color:var(--ink);font-size:18px;margin-right:auto;letter-spacing:.03em;}
+.nav-logo span{color:var(--sakura-dark);}
+.nav-links{display:flex;gap:0;align-items:center;}
+.nav-link{padding:0 18px;height:64px;display:flex;align-items:center;color:var(--ink-muted);font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:color .2s,border-color .2s;white-space:nowrap;}
+.nav-link:hover,.nav-link.active{color:var(--sakura-dark);border-bottom-color:var(--sakura-deep);}
+.nav-user{margin-left:16px;display:flex;align-items:center;gap:8px;padding:6px 16px;background:linear-gradient(135deg,rgba(200,150,12,.12),rgba(240,192,64,.08));border:1px solid rgba(200,150,12,.3);}
+.nav-user .bvip{font-size:9px;letter-spacing:3px;text-transform:uppercase;background:linear-gradient(135deg,var(--vip-gold),var(--vip-gold-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
+.nav-user .bname{font-size:11px;color:var(--vip-gold);letter-spacing:2px;font-weight:500;}
+.nav-admin{margin-left:12px;display:flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);cursor:pointer;transition:background .2s;}
+.nav-admin:hover{background:rgba(192,57,43,.13);}
+.nav-admin span{font-size:10px;color:var(--torii);letter-spacing:2px;text-transform:uppercase;}
+.nav-out{background:none;border:none;color:var(--ink-muted);font-size:11px;cursor:pointer;padding:4px 10px;letter-spacing:1px;transition:color .2s;margin-left:8px;}
+.nav-out:hover{color:var(--torii);}
+
+/* ── HERO ── */
+#hero{min-height:100vh;background:linear-gradient(150deg,#fce8f0 0%,#fdf5e6 35%,#edf5e9 70%,#f0eaf7 100%);position:relative;display:flex;align-items:center;justify-content:center;flex-direction:column;overflow:hidden;text-align:center;}
+#hero::before{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 15% 55%,rgba(247,197,204,.45) 0%,transparent 55%),radial-gradient(ellipse at 85% 20%,rgba(168,197,160,.3) 0%,transparent 50%);}
+.hero-sun{position:absolute;width:440px;height:440px;border-radius:50%;background:radial-gradient(circle,rgba(247,197,204,.6) 0%,rgba(255,226,160,.2) 50%,transparent 70%);border:1px solid rgba(224,130,154,.22);top:50%;left:50%;transform:translate(-50%,-50%);animation:sp 7s ease-in-out infinite;box-shadow:0 0 100px rgba(247,197,204,.35);}
+.hbk{position:absolute;font-family:'Noto Serif JP',serif;font-size:160px;color:rgba(192,57,43,.04);pointer-events:none;user-select:none;animation:bkf ease-in-out infinite;}
+.hero-content{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:22px;}
+.hero-wb{display:inline-flex;align-items:center;gap:10px;padding:7px 20px;border:1px solid rgba(200,150,12,.3);background:rgba(200,150,12,.07);}
+.hero-wb .dot{width:6px;height:6px;border-radius:50%;background:var(--vip-gold-light);animation:dp 1.5s ease infinite;}
+@keyframes dp{0%,100%{opacity:1;}50%{opacity:.25;}}
+.hero-wb span{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--vip-gold);}
+.hero-jp{font-family:'Noto Serif JP',serif;font-size:clamp(60px,10vw,110px);font-weight:300;color:var(--ink);line-height:1;letter-spacing:.05em;text-shadow:0 2px 20px rgba(44,26,14,.08);animation:fu .9s ease both;}
+.hero-jp span{color:var(--sakura-dark);}
+@keyframes fu{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+.hero-sub{font-family:'Crimson Pro',serif;font-size:16px;font-style:italic;color:var(--ink-muted);letter-spacing:4px;animation:fu .9s .15s ease both;}
+.hero-desc{font-size:13px;color:var(--ink-soft);letter-spacing:1px;max-width:420px;line-height:1.9;animation:fu .9s .25s ease both;}
+.hero-line{width:1px;height:60px;background:linear-gradient(to bottom,var(--sakura-deep),var(--gold-light));animation:fu .9s .4s ease both;}
+.hero-cta{font-size:10px;letter-spacing:4px;color:var(--ink-muted);text-transform:uppercase;animation:fu .9s .5s ease both;cursor:pointer;transition:color .2s;}
+.hero-cta:hover{color:var(--sakura-dark);}
+
+/* ── SECTIONS ── */
+.section{padding:80px 40px;max-width:1100px;margin:0 auto;}
+.sec-hdr{display:flex;align-items:center;gap:20px;margin-bottom:60px;}
+.sec-num{font-family:'Noto Serif JP',serif;font-size:60px;color:var(--sakura-deep);opacity:.2;line-height:1;font-weight:300;}
+.sec-tw{display:flex;flex-direction:column;gap:4px;}
+.sec-jp{font-family:'Noto Serif JP',serif;font-size:28px;color:var(--ink);font-weight:400;}
+.sec-id{font-size:11px;letter-spacing:4px;color:var(--ink-muted);text-transform:uppercase;}
+.sec-line{flex:1;height:1px;background:linear-gradient(to right,var(--border-sakura),transparent);}
+
+/* ── MATERI GRID ── */
+.materi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border-sakura);border:1px solid var(--border-sakura);box-shadow:0 8px 40px var(--shadow);}
+.mc{background:var(--parchment);padding:36px 32px;cursor:pointer;transition:background .25s;position:relative;overflow:hidden;}
+.mc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--sakura-deep),var(--gold-light));transform:scaleY(0);transform-origin:bottom;transition:transform .3s;}
+.mc:hover::before{transform:scaleY(1);}
+.mc:hover{background:#fef2f5;}
+.mc:hover .ck{color:var(--sakura-deep);}
+.cn{font-size:10px;letter-spacing:4px;color:var(--ink-muted);text-transform:uppercase;margin-bottom:12px;}
+.ck{font-family:'Noto Serif JP',serif;font-size:42px;font-weight:300;color:rgba(44,26,14,.07);position:absolute;right:24px;top:24px;line-height:1;transition:color .3s;pointer-events:none;}
+.ct{font-family:'Noto Serif JP',serif;font-size:20px;font-weight:400;color:var(--ink);margin-bottom:8px;}
+.cd{font-size:12px;line-height:1.8;color:var(--ink-soft);}
+.cb{display:inline-block;margin-top:16px;padding:4px 12px;border:1px solid var(--border-sakura);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sakura-dark);background:rgba(247,197,204,.1);}
+
+/* ── CONTENT PANEL ── */
+#content-panel{display:none;background:var(--parchment);border-top:1px solid var(--border-sakura);}
+#content-panel.active{display:block;}
+.panel-inner{max-width:1100px;margin:0 auto;padding:60px 40px;}
+.panel-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:48px;padding-bottom:32px;border-bottom:1px solid var(--border-sakura);}
+.panel-title{font-family:'Noto Serif JP',serif;font-size:32px;font-weight:300;color:var(--ink);}
+.panel-title span{color:var(--sakura-dark);}
+.panel-close{background:none;border:1px solid var(--border-sakura);color:var(--ink-muted);font-size:16px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.panel-close:hover{background:rgba(247,197,204,.3);color:var(--sakura-dark);}
+.tabs{display:flex;border-bottom:1px solid var(--border-sakura);margin-bottom:32px;flex-wrap:wrap;}
+.tab{padding:10px 24px;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-muted);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .2s;}
+.tab:hover{color:var(--sakura-dark);}
+.tab.active{color:var(--sakura-dark);border-bottom-color:var(--sakura-deep);font-weight:500;}
+.tab-content{display:none;}.tab-content.active{display:block;}
+.char-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:1px;background:var(--border-sakura);border:1px solid var(--border-sakura);}
+.char-cell{background:var(--parchment);padding:16px 8px;text-align:center;transition:background .2s;}
+.char-cell:hover{background:rgba(247,197,204,.25);}
+.char-jp{display:block;font-family:'Noto Serif JP',serif;font-size:26px;color:var(--ink);margin-bottom:4px;}
+.char-ro{display:block;font-size:10px;letter-spacing:1px;color:var(--ink-muted);}
+.vocab-table{width:100%;border-collapse:collapse;}
+.vocab-table thead th{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-muted);padding:10px 14px;text-align:left;border-bottom:1px solid var(--border-sakura);background:rgba(247,197,204,.06);}
+.vocab-table tbody tr{border-bottom:1px solid rgba(184,146,42,.07);}
+.vocab-table tbody tr:hover td{background:rgba(247,197,204,.1);}
+.vocab-table td{padding:12px 14px;font-size:13px;color:var(--ink-soft);}
+.vocab-table td.jp{font-family:'Noto Serif JP',serif;font-size:16px;color:var(--ink);}
+.vocab-table td.ro{font-style:italic;color:var(--sakura-dark);font-size:12px;}
+.vocab-table td.id{color:var(--matcha);font-weight:500;}
+.vocab-table td.ex{font-size:11px;color:var(--ink-muted);}
+.gp{padding:24px;margin-bottom:16px;background:var(--washi-2);border:1px solid var(--border-sakura);border-left:3px solid var(--sakura-deep);}
+.gp .pat{font-family:'Noto Serif JP',serif;font-size:20px;color:var(--ink);margin-bottom:8px;}
+.gp .mea{font-size:13px;color:var(--matcha);margin-bottom:10px;font-weight:500;}
+.gp .exa{font-size:12px;color:var(--ink-muted);font-style:italic;}
+
+/* ── QUIZ ── */
+.quiz-section{padding:32px 0;}
+.quiz-hdr{text-align:center;margin-bottom:32px;}
+.quiz-badge{display:inline-block;padding:4px 14px;background:rgba(247,197,204,.2);border:1px solid var(--border-sakura);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--sakura-dark);margin-bottom:12px;}
+.quiz-title{font-family:'Noto Serif JP',serif;font-size:22px;color:var(--ink);margin-bottom:6px;}
+.quiz-prog{font-size:11px;color:var(--ink-muted);letter-spacing:2px;}
+.quiz-card{background:var(--parchment);border:1px solid var(--border-sakura);padding:36px;box-shadow:0 4px 20px var(--shadow);}
+.quiz-q{font-family:'Noto Serif JP',serif;font-size:64px;color:var(--ink);display:block;text-align:center;margin-bottom:16px;}
+.quiz-qt{font-size:16px;color:var(--ink-soft);margin-bottom:28px;line-height:1.6;}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.quiz-opt{padding:13px 20px;background:var(--washi-2);border:1px solid var(--border-sakura);color:var(--ink-soft);font-family:'Noto Sans JP',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;text-align:left;}
+.quiz-opt:hover:not(:disabled){background:rgba(247,197,204,.3);border-color:var(--sakura-deep);color:var(--ink);}
+.quiz-opt.correct{background:rgba(106,152,112,.12);border-color:var(--matcha);color:var(--matcha);}
+.quiz-opt.wrong{background:rgba(192,57,43,.07);border-color:var(--torii);color:var(--torii);}
+.quiz-fb{font-size:13px;padding:12px 16px;margin-bottom:12px;display:none;}
+.quiz-fb.correct{display:block;background:rgba(106,152,112,.1);color:var(--matcha);border:1px solid rgba(106,152,112,.25);}
+.quiz-fb.wrong{display:block;background:rgba(192,57,43,.06);color:var(--torii);border:1px solid rgba(192,57,43,.18);}
+.quiz-nav{display:flex;gap:12px;}
+.btn-next{padding:11px 30px;background:linear-gradient(135deg,var(--sakura-deep),var(--sakura-dark));border:none;color:#fff;font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;transition:all .2s;}
+.btn-next:hover{filter:brightness(1.08);transform:translateY(-1px);}
+.btn-restart{padding:11px 30px;background:transparent;border:1px solid var(--border-sakura);color:var(--sakura-dark);font-family:'Plus Jakarta Sans',sans-serif;font-size:11px;letter-spacing:2px;cursor:pointer;transition:all .2s;}
+.btn-restart:hover{background:rgba(247,197,204,.25);}
+.quiz-result{display:none;text-align:center;padding:48px 0;}
+.result-score{font-family:'Noto Serif JP',serif;font-size:72px;color:var(--sakura-dark);line-height:1;}
+.result-lbl{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--ink-muted);margin:8px 0 16px;}
+.result-msg{font-size:14px;color:var(--ink-soft);line-height:1.7;}
+
+/* ── VIP SECTION ── */
+#vip-materi{background:linear-gradient(135deg,#1a0e00 0%,#2d1c00 40%,#1a0e00 100%);padding:80px 0;position:relative;overflow:hidden;}
+#vip-materi::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 30% 50%,rgba(200,150,12,.1) 0%,transparent 60%);pointer-events:none;}
+.vip-inner{max-width:1100px;margin:0 auto;padding:0 40px;position:relative;z-index:1;}
+.vip-shdr{display:flex;align-items:center;gap:20px;margin-bottom:60px;}
+.vip-sn{font-family:'Noto Serif JP',serif;font-size:60px;background:linear-gradient(to bottom,var(--vip-gold-light),var(--vip-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;opacity:.3;line-height:1;font-weight:300;}
+.vip-stw .t{font-family:'Noto Serif JP',serif;font-size:28px;color:#f5e6c0;}
+.vip-stw .s{font-size:11px;letter-spacing:4px;color:rgba(200,150,12,.5);text-transform:uppercase;}
+.vip-sl{flex:1;height:1px;background:linear-gradient(to right,rgba(200,150,12,.2),transparent);}
+.vip-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:rgba(200,150,12,.12);border:1px solid rgba(200,150,12,.12);}
+.vc{background:rgba(255,255,255,.03);padding:36px 32px;cursor:pointer;transition:background .25s;position:relative;overflow:hidden;}
+.vc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(to bottom,var(--vip-gold),var(--vip-gold-light));transform:scaleY(0);transform-origin:bottom;transition:transform .3s;}
+.vc:hover::before{transform:scaleY(1);}
+.vc:hover{background:rgba(200,150,12,.07);}
+.vc-n{font-size:10px;letter-spacing:4px;color:rgba(200,150,12,.45);text-transform:uppercase;margin-bottom:12px;}
+.vc-k{font-family:'Noto Serif JP',serif;font-size:42px;font-weight:300;position:absolute;right:24px;top:24px;line-height:1;background:linear-gradient(to bottom,var(--vip-gold-light),var(--vip-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;opacity:.12;transition:opacity .3s;}
+.vc:hover .vc-k{opacity:.35;}
+.vc-t{font-family:'Noto Serif JP',serif;font-size:20px;color:#f5e6c0;margin-bottom:8px;}
+.vc-d{font-size:12px;line-height:1.8;color:rgba(245,230,192,.55);}
+.vc-b{display:inline-block;margin-top:16px;padding:4px 12px;border:1px solid rgba(200,150,12,.28);font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--vip-gold);background:rgba(200,150,12,.07);}
+
+/* ── PROGRESS ── */
+#progress-section{background:var(--washi-2);}
+.progress-inner{max-width:1100px;margin:0 auto;padding:80px 40px;}
+.progress-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px;}
+.pi{background:var(--parchment);padding:28px;border:1px solid var(--border-sakura);box-shadow:0 2px 12px var(--shadow);}
+.pl{font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:14px;}
+.pw{height:3px;background:rgba(184,146,42,.1);margin-bottom:10px;overflow:hidden;}
+.pb{height:100%;width:0;background:linear-gradient(to right,var(--sakura-deep),var(--gold-light));transition:width 0s;}
+.pb.animate{transition:width 1.2s cubic-bezier(.22,1,.36,1);width:calc(var(--w)*100%);}
+.pn{font-family:'Noto Serif JP',serif;font-size:40px;color:var(--ink);line-height:1;}
+.pu{font-size:10px;color:var(--ink-muted);letter-spacing:1px;margin-top:4px;}
+
+/* ── METHOD ── */
+#method{background:linear-gradient(150deg,#fce8f0 0%,#fdf5e6 40%,#edf5e9 100%);padding:80px 0;}
+.method-inner{max-width:1100px;margin:0 auto;padding:0 40px;}
+.method-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border-sakura);border:1px solid var(--border-sakura);}
+.method-card{background:rgba(253,246,240,.9);padding:40px 32px;transition:background .3s;position:relative;overflow:hidden;}
+.method-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(to right,var(--sakura-deep),var(--gold-light));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
+.method-card:hover::after{transform:scaleX(1);}
+.method-card:hover{background:rgba(247,197,204,.15);}
+.mi{font-family:'Noto Serif JP',serif;font-size:32px;color:var(--sakura-deep);margin-bottom:12px;display:block;}
+.mn{font-family:'Noto Serif JP',serif;font-size:48px;color:rgba(224,130,154,.15);font-weight:300;line-height:1;margin-bottom:14px;}
+.mt{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:8px;}
+.md{font-size:12px;color:var(--ink-soft);line-height:1.9;}
+
+/* ── ADMIN MODAL ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(44,26,14,.55);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.abox{background:var(--parchment);border:1px solid rgba(192,57,43,.2);max-width:680px;width:95%;max-height:90vh;overflow-y:auto;padding:44px 40px;position:relative;transform:translateY(20px);transition:transform .3s;box-shadow:0 20px 60px rgba(44,26,14,.25);}
+.modal-overlay.open .abox{transform:translateY(0);}
+.modal-close{position:absolute;top:16px;right:16px;background:none;border:1px solid var(--border-sakura);color:var(--ink-muted);width:32px;height:32px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{background:rgba(247,197,204,.3);color:var(--sakura-dark);}
+.ahdr{display:flex;align-items:baseline;gap:14px;margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid rgba(192,57,43,.15);}
+.ahdr h2{font-family:'Noto Serif JP',serif;font-size:24px;color:var(--torii);}
+.ahdr .sub{font-size:11px;letter-spacing:3px;color:var(--ink-muted);}
+.asec{margin-bottom:36px;}
+.asec-t{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--border-sakura);}
+.arow{display:grid;grid-template-columns:1fr 1fr auto;gap:12px;align-items:end;}
+.fl{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-muted);margin-bottom:8px;display:block;}
+.fi{width:100%;padding:12px 16px;background:var(--washi-2);border:1px solid var(--border-sakura);color:var(--ink);font-family:'Noto Sans JP',sans-serif;font-size:13px;outline:none;transition:border-color .2s;}
+.fi:focus{border-color:var(--sakura-deep);}
+.fi::placeholder{color:var(--ink-faint);}
+.gen-btn{padding:8px 12px;background:transparent;border:1px solid rgba(184,146,42,.3);color:var(--gold);font-size:10px;letter-spacing:2px;cursor:pointer;transition:all .2s;margin-left:6px;}
+.gen-btn:hover{background:rgba(184,146,42,.1);}
+.create-btn{padding:13px 20px;background:var(--torii);border:none;color:#fff;font-size:11px;letter-spacing:2px;cursor:pointer;transition:filter .2s;}
+.create-btn:hover{filter:brightness(1.1);}
+.a-ok{display:none;padding:10px 14px;background:rgba(106,152,112,.1);border:1px solid rgba(106,152,112,.25);color:var(--matcha);font-size:12px;margin-bottom:12px;}
+.a-ok.show{display:block;}
+.a-err{display:none;padding:10px 14px;background:rgba(192,57,43,.07);border:1px solid rgba(192,57,43,.2);color:var(--torii);font-size:12px;margin-bottom:12px;}
+.a-err.show{display:block;}
+.mt-table{width:100%;border-collapse:collapse;}
+.mt-table thead th{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink-muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border-sakura);}
+.mt-table tbody tr{border-bottom:1px solid rgba(184,146,42,.07);}
+.mt-table td{padding:10px 12px;font-size:12px;color:var(--ink-soft);}
+.mt-table td.un{font-weight:600;color:var(--ink);}
+.tok{font-family:monospace;font-size:11px;color:var(--matcha);background:rgba(106,152,112,.06);padding:3px 7px;}
+.tbtn{padding:4px 10px;font-size:10px;cursor:pointer;border:1px solid;transition:all .2s;margin-right:4px;}
+.tbtn.cp{background:rgba(184,146,42,.06);border-color:rgba(184,146,42,.25);color:var(--gold);}
+.tbtn.cp:hover{background:rgba(184,146,42,.14);}
+.tbtn.dl{background:rgba(192,57,43,.06);border-color:rgba(192,57,43,.2);color:var(--torii);}
+.tbtn.dl:hover{background:rgba(192,57,43,.14);}
+
+/* ── FADE-UP ── */
+.fade-up{opacity:0;transform:translateY(24px);transition:opacity .7s ease,transform .7s ease;}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+.stagger .fade-up:nth-child(1){transition-delay:0s}.stagger .fade-up:nth-child(2){transition-delay:.08s}
+.stagger .fade-up:nth-child(3){transition-delay:.16s}.stagger .fade-up:nth-child(4){transition-delay:.24s}
+.stagger .fade-up:nth-child(5){transition-delay:.32s}.stagger .fade-up:nth-child(6){transition-delay:.4s}
+
+/* ── FOOTER ── */
+footer{background:linear-gradient(to bottom,var(--washi-3),var(--washi-dark));padding:60px 40px;text-align:center;border-top:1px solid var(--border-sakura);}
+.footer-jp{font-family:'Noto Serif JP',serif;font-size:48px;color:var(--sakura-deep);opacity:.3;line-height:1;margin-bottom:10px;}
+.footer-sub{font-size:11px;color:var(--ink-muted);letter-spacing:4px;}
+.footer-wa{display:inline-flex;align-items:center;gap:8px;margin-top:20px;padding:10px 24px;border:1px solid rgba(37,211,102,.3);color:var(--wa);font-size:11px;letter-spacing:2px;text-decoration:none;background:rgba(37,211,102,.04);transition:all .2s;}
+.footer-wa:hover{background:rgba(37,211,102,.1);}
+
+/* ── TOAST ── */
+.toast{position:fixed;bottom:28px;right:28px;padding:12px 20px;background:var(--ink);color:#fdf6f0;font-size:12px;letter-spacing:1px;z-index:9000;transform:translateY(16px);opacity:0;transition:all .3s;pointer-events:none;border-left:3px solid var(--sakura-deep);}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{background:var(--matcha);border-left-color:rgba(255,255,255,.3);}
+.toast.error{background:var(--torii);border-left-color:rgba(255,255,255,.3);}
+
+@media(max-width:640px){
+  nav{padding:0 16px;}.nav-link{padding:0 10px;font-size:10px;letter-spacing:1px;}
+  .section,.progress-inner,.method-inner,.vip-inner{padding-left:20px;padding-right:20px;}
+  .hero-jp{font-size:64px;}.quiz-opts{grid-template-columns:1fr;}.arow{grid-template-columns:1fr;}
+  .gate-card{padding:36px 28px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="lk">語</div>
+  <div class="lt">NIHON GO VIP</div>
+  <div class="lb"></div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="gsun"></div>
+  <div class="gbk" style="top:8%;left:3%;--r:-8deg;animation-duration:9s;">語</div>
+  <div class="gbk" style="top:50%;right:3%;--r:6deg;animation-duration:12s;">学</div>
+  <div class="gbk" style="bottom:6%;left:18%;--r:3deg;animation-duration:10s;font-size:120px;">日</div>
+
+  <div class="gate-card">
+    <div class="gate-logo">
+      <div class="gate-logo-jp">日本<span>語</span></div>
+      <div class="gate-logo-sub">nihongo vip — hayyandesu</div>
+    </div>
+    <div class="gate-divider"></div>
+
+    <div class="gate-error" id="gateError">Username atau token tidak valid.</div>
+
+    <label class="gate-label">Username</label>
+    <input class="gate-field" type="text" id="gU" placeholder="masukkan username kamu" autocomplete="username">
+
+    <label class="gate-label">Token</label>
+    <input class="gate-field" type="password" id="gT" placeholder="token dari admin" autocomplete="current-password">
+
+    <button class="gate-btn" onclick="doLogin()">Masuk ke NihonGo VIP →</button>
+
+    <div class="gate-footer">
+      <p>Belum punya akses? Hubungi admin untuk request username & token.</p>
+      <a class="gate-wa" href="https://wa.me/628XXXXXXXXX?text=Halo%20Admin%2C%20saya%20mau%20request%20akses%20VIP%20NihonGo.%20Username%3A%20" target="_blank">
+        📱 Request Akun via WhatsApp
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- ADMIN MODAL -->
+<div class="modal-overlay" id="adminModal">
+  <div class="abox">
+    <button class="modal-close" onclick="closeAdmin()">✕</button>
+    <div class="ahdr">
+      <h2>管理者 Panel</h2>
+      <span class="sub">ADMIN — Member Management</span>
+    </div>
+    <div class="asec">
+      <div class="asec-t">Buat Akun Member VIP</div>
+      <div class="a-ok" id="aOk"></div>
+      <div class="a-err" id="aErr"></div>
+      <div class="arow">
+        <div>
+          <label class="fl">Username</label>
+          <input class="fi" type="text" id="newU" placeholder="username member">
+        </div>
+        <div>
+          <label class="fl">Token <button class="gen-btn" onclick="genToken()" type="button">⟳ Generate</button></label>
+          <input class="fi" type="text" id="newT" placeholder="atau isi manual">
+        </div>
+        <button class="create-btn" onclick="createMember()">+ Buat</button>
+      </div>
+    </div>
+    <div class="asec">
+      <div class="asec-t">Daftar Member VIP</div>
+      <table class="mt-table">
+        <thead><tr><th>#</th><th>Username</th><th>Token</th><th>Dibuat</th><th>Aksi</th></tr></thead>
+        <tbody id="mTbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP -->
+<div id="app">
+  <nav>
+    <div class="nav-logo">日本語<span>VIP</span></div>
+    <div class="nav-links">
+      <div class="nav-link active" onclick="scrollTo('#hero')">HOME</div>
+      <div class="nav-link" onclick="scrollTo('#materi-section')">MATERI</div>
+      <div class="nav-link" onclick="scrollTo('#vip-materi')">VIP</div>
+      <div class="nav-link" onclick="scrollTo('#progress-section')">PROGRESS</div>
+    </div>
+    <div id="navRight"></div>
+  </nav>
+
+  <section id="hero">
+    <div class="hero-sun"></div>
+    <div class="hbk" style="top:10%;left:5%;--r:-8deg;animation-duration:8s;">語</div>
+    <div class="hbk" style="top:55%;right:4%;--r:6deg;animation-duration:11s;">学</div>
+    <div class="hbk" style="bottom:10%;left:22%;--r:3deg;animation-duration:9s;font-size:120px;">日</div>
+    <div class="hero-content">
+      <div class="hero-wb">
+        <div class="dot"></div>
+        <span id="heroTag">VIP Member</span>
+      </div>
+      <div class="hero-jp">日本<span>語</span></div>
+      <div class="hero-sub">nihongo vip — hayyandesu</div>
+      <div class="hero-desc" id="heroDesc">Selamat datang! Semua materi, quiz, dan konten eksklusif VIP telah terbuka untukmu.</div>
+      <div class="hero-line"></div>
+      <div class="hero-cta" onclick="scrollTo('#materi-section')">▼ &nbsp; mulai belajar</div>
+    </div>
+  </section>
+
+  <!-- MATERI -->
+  <section id="materi-section">
+    <div class="section">
+      <div class="sec-hdr">
+        <div class="sec-num">一</div>
+        <div class="sec-tw"><div class="sec-jp">学習コンテンツ</div><div class="sec-id">Materi Belajar</div></div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="materi-grid stagger">
+        <div class="mc fade-up" onclick="openPanel('hiragana')">
+          <div class="cn">01</div><div class="ck">あ</div>
+          <div class="ct">Hiragana</div>
+          <div class="cd">46 karakter dasar hiragana lengkap dengan pelafalan.</div>
+          <span class="cb">BUKA</span>
+        </div>
+        <div class="mc fade-up" onclick="openPanel('katakana')">
+          <div class="cn">02</div><div class="ck">ア</div>
+          <div class="ct">Katakana</div>
+          <div class="cd">46 karakter katakana untuk kata serapan dan nama asing.</div>
+          <span class="cb">BUKA</span>
+        </div>
+        <div class="mc fade-up" onclick="openPanel('vocab')">
+          <div class="cn">03</div><div class="ck">語</div>
+          <div class="ct">Kosakata Dasar</div>
+          <div class="cd">200+ kosakata paling sering digunakan + quiz interaktif.</div>
+          <span class="cb">BUKA</span>
+        </div>
+        <div class="mc fade-up" onclick="openPanel('grammar')">
+          <div class="cn">04</div><div class="ck">文</div>
+          <div class="ct">Tata Bahasa N5</div>
+          <div class="cd">Pola kalimat dasar untuk pondasi bahasa Jepang.</div>
+          <span class="cb">BUKA</span>
+        </div>
+        <div class="mc fade-up" onclick="openPanel('quiz-hira')">
+          <div class="cn">05</div><div class="ck">試</div>
+          <div class="ct">Quiz Hiragana</div>
+          <div class="cd">Uji hafalan hiragana dengan soal pilihan ganda.</div>
+          <span class="cb">QUIZ</span>
+        </div>
+        <div class="mc fade-up" onclick="openPanel('quiz-vocab')">
+          <div class="cn">06</div><div class="ck">問</div>
+          <div class="ct">Quiz Kosakata</div>
+          <div class="cd">Latihan kosakata harian untuk memperkuat ingatan.</div>
+          <span class="cb">QUIZ</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTENT PANEL -->
+  <div id="content-panel">
+    <div class="panel-inner">
+      <div class="panel-hdr">
+        <div class="panel-title" id="panelTitle"></div>
+        <button class="panel-close" onclick="closePanel()">✕</button>
+      </div>
+      <div id="panelBody"></div>
+    </div>
+  </div>
+
+  <!-- VIP MATERI -->
+  <section id="vip-materi">
+    <div class="vip-inner">
+      <div class="vip-shdr">
+        <div class="vip-sn">✦</div>
+        <div class="vip-stw"><div class="t">Konten VIP Eksklusif</div><div class="s">Hanya untuk Member VIP</div></div>
+        <div class="vip-sl"></div>
+      </div>
+      <div class="vip-cards stagger">
+        <div class="vc fade-up" onclick="openPanel('kanji')">
+          <div class="vc-n">VIP — 01</div><div class="vc-k">漢</div>
+          <div class="vc-t">Kanji N5 & N4</div>
+          <div class="vc-d">300+ kanji esensial dengan stroke order & kalimat contoh.</div>
+          <span class="vc-b">✦ BUKA</span>
+        </div>
+        <div class="vc fade-up" onclick="openPanel('grammar-adv')">
+          <div class="vc-n">VIP — 02</div><div class="vc-k">文</div>
+          <div class="vc-t">Tata Bahasa Lanjut N4–N3</div>
+          <div class="vc-d">Pola kalimat kompleks dengan penjelasan mendalam.</div>
+          <span class="vc-b">✦ BUKA</span>
+        </div>
+        <div class="vc fade-up" onclick="openPanel('quiz-kanji')">
+          <div class="vc-n">VIP — 03</div><div class="vc-k">試</div>
+          <div class="vc-t">Quiz Kanji</div>
+          <div class="vc-d">Uji penguasaan kanji dengan soal-soal tantangan.</div>
+          <span class="vc-b">✦ QUIZ</span>
+        </div>
+        <div class="vc fade-up">
+          <div class="vc-n">VIP — 04</div><div class="vc-k">聞</div>
+          <div class="vc-t">Audio Percakapan</div>
+          <div class="vc-d">Dialog audio native speaker + transkrip & terjemahan.</div>
+          <span class="vc-b">✦ COMING SOON</span>
+        </div>
+        <div class="vc fade-up">
+          <div class="vc-n">VIP — 05</div><div class="vc-k">試</div>
+          <div class="vc-t">Simulasi JLPT N5–N4</div>
+          <div class="vc-d">Latihan soal JLPT lengkap dengan timer & pembahasan.</div>
+          <span class="vc-b">✦ COMING SOON</span>
+        </div>
+        <div class="vc fade-up">
+          <div class="vc-n">VIP — 06</div><div class="vc-k">書</div>
+          <div class="vc-t">Latihan Menulis</div>
+          <div class="vc-d">Worksheet stroke order kanji untuk latihan menulis.</div>
+          <span class="vc-b">✦ COMING SOON</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="progress-section">
+    <div class="progress-inner">
+      <div class="sec-hdr">
+        <div class="sec-num">三</div>
+        <div class="sec-tw"><div class="sec-jp">進捗</div><div class="sec-id">Progress Belajar</div></div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="progress-grid stagger">
+        <div class="pi fade-up"><div class="pl">Hiragana</div><div class="pw"><div class="pb" style="--w:.85"></div></div><div class="pn">85</div><div class="pu">dari 100 karakter</div></div>
+        <div class="pi fade-up"><div class="pl">Katakana</div><div class="pw"><div class="pb" style="--w:.72"></div></div><div class="pn">72</div><div class="pu">dari 100 karakter</div></div>
+        <div class="pi fade-up"><div class="pl">Kosakata</div><div class="pw"><div class="pb" style="--w:.46"></div></div><div class="pn">460</div><div class="pu">kata dipelajari</div></div>
+        <div class="pi fade-up"><div class="pl">Kanji VIP</div><div class="pw"><div class="pb" style="--w:.3"></div></div><div class="pn">90</div><div class="pu">dari 300 kanji</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section id="method">
+    <div class="method-inner">
+      <div class="sec-hdr">
+        <div class="sec-num">四</div>
+        <div class="sec-tw"><div class="sec-jp">学習法</div><div class="sec-id">Metode Belajar</div></div>
+        <div class="sec-line"></div>
+      </div>
+      <div class="method-grid stagger">
+        <div class="method-card fade-up"><span class="mi">見</span><div class="mn">01</div><div class="mt">Visual Immersion</div><div class="md">Belajar karakter dengan asosiasi visual yang kuat dan konteks nyata.</div></div>
+        <div class="method-card fade-up"><span class="mi">聞</span><div class="mn">02</div><div class="mt">Audio Native</div><div class="md">Pengucapan asli dari native speaker untuk intonasi yang benar.</div></div>
+        <div class="method-card fade-up"><span class="mi">練</span><div class="mn">03</div><div class="mt">Latihan Aktif</div><div class="md">Quiz dan latihan interaktif di setiap sesi untuk mengukur pemahaman.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-jp">語</div>
+    <div class="footer-sub">HAYYANDESU — NIHONGO VIP</div><br>
+    <a class="footer-wa" href="https://wa.me/628XXXXXXXXX" target="_blank">📱 Hubungi Admin</a>
+  </footer>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+const ADMIN_USER = 'admin';
+const ADMIN_PASS = 'admin123'; // ← GANTI PASSWORD INI
+
+// ── TAMBAHKAN MEMBER DI SINI ──────────────────────────────────────
+// Format: "username": { token: "token", createdAt: "tanggal" }
+const DEFAULT_MEMBERS = {
+  // "contoh": { token: "token123", createdAt: "01/01/2025" },
+};
+// ─────────────────────────────────────────────────────────────────
+
+let members = { ...DEFAULT_MEMBERS, ...JSON.parse(localStorage.getItem('nhg_members') || '{}') };
+let currentUser = JSON.parse(sessionStorage.getItem('nhg_session') || 'null');
+
+// ── BOOT ────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  createPetals();
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hide');
+    setTimeout(() => {
+      currentUser ? bootApp() : showGate();
+    }, 500);
+  }, 2600);
+});
+
+function showGate() {
+  document.getElementById('loginScreen').classList.add('show');
+  setTimeout(() => document.getElementById('gU').focus(), 400);
+}
+
+function bootApp() {
+  document.getElementById('loginScreen').classList.remove('show');
+  const app = document.getElementById('app');
+  app.style.display = 'block';
+  requestAnimationFrame(() => { requestAnimationFrame(() => { app.style.opacity = '1'; }); });
+  renderNav();
+  renderHero();
+  initObserver();
+}
+
+// ── AUTH ────────────────────────────────────────────────────────
+function doLogin() {
+  const u = document.getElementById('gU').value.trim();
+  const t = document.getElementById('gT').value.trim();
+  const err = document.getElementById('gateError');
+  err.classList.remove('show');
+
+  if (!u || !t) { err.textContent = 'Username dan token harus diisi.'; err.classList.add('show'); return; }
+
+  if (u === ADMIN_USER && t === ADMIN_PASS) {
+    currentUser = { username: ADMIN_USER, isAdmin: true };
+    sessionStorage.setItem('nhg_session', JSON.stringify(currentUser));
+    bootApp();
+    showToast('Selamat datang, Admin! ⚙', 'success');
+    return;
+  }
+
+  const m = members[u.toLowerCase()];
+  if (m && m.token === t) {
+    currentUser = { username: u, isVIP: true };
+    sessionStorage.setItem('nhg_session', JSON.stringify(currentUser));
+    bootApp();
+    showToast(`✦ Selamat datang, ${u}!`, 'success');
+  } else {
+    err.textContent = 'Username atau token tidak valid.';
+    err.classList.add('show');
+    document.getElementById('gT').value = '';
+    document.getElementById('gT').focus();
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('nhg_session');
+  currentUser = null;
+  const app = document.getElementById('app');
+  app.style.opacity = '0';
+  setTimeout(() => { app.style.display = 'none'; }, 400);
+  document.getElementById('content-panel').classList.remove('active');
+  document.getElementById('gU').value = '';
+  document.getElementById('gT').value = '';
+  document.getElementById('gateError').classList.remove('show');
+  showGate();
+  showToast('Berhasil keluar.');
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('loginScreen').classList.contains('show')) doLogin();
+});
+
+// ── RENDER ──────────────────────────────────────────────────────
+function renderNav() {
+  const el = document.getElementById('navRight');
+  if (!currentUser) return;
+  if (currentUser.isAdmin) {
+    el.innerHTML = `<div class="nav-admin" onclick="openAdmin()"><span>⚙ ADMIN</span></div><button class="nav-out" onclick="doLogout()">Keluar</button>`;
+  } else {
+    el.innerHTML = `<div class="nav-user"><span class="bvip">✦ VIP</span><span class="bname">${currentUser.username}</span></div><button class="nav-out" onclick="doLogout()">Keluar</button>`;
+  }
+}
+
+function renderHero() {
+  if (!currentUser) return;
+  if (currentUser.isAdmin) {
+    document.getElementById('heroTag').textContent = 'Admin Panel Aktif';
+    document.getElementById('heroDesc').textContent = 'Mode admin aktif. Gunakan tombol ⚙ ADMIN di navbar untuk mengelola member VIP.';
+  } else {
+    document.getElementById('heroTag').textContent = `✦ VIP — ${currentUser.username}`;
+    document.getElementById('heroDesc').textContent = 'Selamat datang! Semua materi, quiz, dan konten eksklusif VIP telah terbuka untukmu.';
+  }
+}
+
+// ── ADMIN ───────────────────────────────────────────────────────
+function openAdmin() { renderMemberTable(); document.getElementById('adminModal').classList.add('open'); }
+function closeAdmin() { document.getElementById('adminModal').classList.remove('open'); }
+document.getElementById('adminModal').addEventListener('click', e => { if (e.target.id === 'adminModal') closeAdmin(); });
+
+function genToken() {
+  const c = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+  document.getElementById('newT').value = Array.from({length:16}, () => c[Math.floor(Math.random()*c.length)]).join('');
+}
+
+function createMember() {
+  const u = document.getElementById('newU').value.trim().toLowerCase();
+  const t = document.getElementById('newT').value.trim();
+  const ok = document.getElementById('aOk'), er = document.getElementById('aErr');
+  ok.classList.remove('show'); er.classList.remove('show');
+  if (!u || !t) { er.textContent = 'Username dan token wajib diisi.'; er.classList.add('show'); return; }
+  if (members[u]) { er.textContent = `Username "${u}" sudah ada.`; er.classList.add('show'); return; }
+  members[u] = { token: t, createdAt: new Date().toLocaleDateString('id-ID') };
+  DEFAULT_MEMBERS[u] = members[u];
+  localStorage.setItem('nhg_members', JSON.stringify(members));
+  document.getElementById('newU').value = ''; document.getElementById('newT').value = '';
+  ok.textContent = `✓ Akun "${u}" berhasil dibuat!`; ok.classList.add('show');
+  renderMemberTable();
+}
+
+function deleteMember(u) {
+  if (!confirm(`Hapus akun "${u}"?`)) return;
+  delete members[u]; localStorage.setItem('nhg_members', JSON.stringify(members));
+  renderMemberTable(); showToast(`Akun ${u} dihapus.`);
+}
+
+function copyToken(t) { navigator.clipboard.writeText(t).then(() => showToast('Token disalin! ✓', 'success')); }
+
+function renderMemberTable() {
+  const tbody = document.getElementById('mTbody');
+  const entries = Object.entries(members);
+  if (!entries.length) { tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:24px;color:var(--ink-muted);">Belum ada member.</td></tr>`; return; }
+  tbody.innerHTML = entries.map(([u,d],i) => `
+    <tr><td>${i+1}</td><td class="un">${u}</td><td><span class="tok">${d.token}</span></td><td>${d.createdAt}</td>
+    <td><button class="tbtn cp" onclick="copyToken('${d.token}')">Salin</button><button class="tbtn dl" onclick="deleteMember('${u}')">Hapus</button></td></tr>`).join('');
+}
+
+// ── CONTENT DATA ────────────────────────────────────────────────
+const hiragana = [
+  ['あ','a'],['い','i'],['う','u'],['え','e'],['お','o'],
+  ['か','ka'],['き','ki'],['く','ku'],['け','ke'],['こ','ko'],
+  ['さ','sa'],['し','shi'],['す','su'],['せ','se'],['そ','so'],
+  ['た','ta'],['ち','chi'],['つ','tsu'],['て','te'],['と','to'],
+  ['な','na'],['に','ni'],['ぬ','nu'],['ね','ne'],['の','no'],
+  ['は','ha'],['ひ','hi'],['ふ','fu'],['へ','he'],['ほ','ho'],
+  ['ま','ma'],['み','mi'],['む','mu'],['め','me'],['も','mo'],
+  ['や','ya'],['ゆ','yu'],['よ','yo'],
+  ['ら','ra'],['り','ri'],['る','ru'],['れ','re'],['ろ','ro'],
+  ['わ','wa'],['を','wo'],['ん','n']
+];
+const katakana = [
+  ['ア','a'],['イ','i'],['ウ','u'],['エ','e'],['オ','o'],
+  ['カ','ka'],['キ','ki'],['ク','ku'],['ケ','ke'],['コ','ko'],
+  ['サ','sa'],['シ','shi'],['ス','su'],['セ','se'],['ソ','so'],
+  ['タ','ta'],['チ','chi'],['ツ','tsu'],['テ','te'],['ト','to'],
+  ['ナ','na'],['ニ','ni'],['ヌ','nu'],['ネ','ne'],['ノ','no'],
+  ['ハ','ha'],['ヒ','hi'],['フ','fu'],['ヘ','he'],['ホ','ho'],
+  ['マ','ma'],['ミ','mi'],['ム','mu'],['メ','me'],['モ','mo'],
+  ['ヤ','ya'],['ユ','yu'],['ヨ','yo'],
+  ['ラ','ra'],['リ','ri'],['ル','ru'],['レ','re'],['ロ','ro'],
+  ['ワ','wa'],['ヲ','wo'],['ン','n']
+];
+const vocabList = [
+  ['私','watashi','Saya','私は学生です。'],
+  ['あなた','anata','Kamu','あなたは先生ですか？'],
+  ['これ','kore','Ini','これは何ですか？'],
+  ['それ','sore','Itu','それは本です。'],
+  ['食べる','taberu','Makan','毎日ご飯を食べます。'],
+  ['飲む','nomu','Minum','水を飲みます。'],
+  ['行く','iku','Pergi','学校に行きます。'],
+  ['来る','kuru','Datang','友達が来ます。'],
+  ['見る','miru','Melihat','映画を見ます。'],
+  ['聞く','kiku','Mendengar','音楽を聞きます。'],
+  ['好き','suki','Suka','猫が好きです。'],
+  ['大きい','ookii','Besar','この家は大きいです。'],
+  ['小さい','chiisai','Kecil','小さい犬です。'],
+  ['新しい','atarashii','Baru','新しい本を買いました。'],
+  ['古い','furui','Lama/Tua','古い映画が好きです。'],
+];
+const grammarBasic = [
+  {p:'〜は〜です',m:'... adalah ...',e:'これは本です。 / Ini adalah buku.'},
+  {p:'〜が好きです',m:'Saya suka ...',e:'音楽が好きです。 / Saya suka musik.'},
+  {p:'〜に行きます',m:'Pergi ke ...',e:'学校に行きます。 / Saya pergi ke sekolah.'},
+  {p:'〜ています',m:'Sedang ...',e:'今、勉強しています。 / Sedang belajar sekarang.'},
+  {p:'〜たいです',m:'Ingin ...',e:'日本に行きたいです。 / Ingin pergi ke Jepang.'},
+];
+const grammarAdv = [
+  {p:'〜てもいいです',m:'Boleh ...',e:'ここで写真を撮ってもいいですか？ / Boleh foto di sini?'},
+  {p:'〜てはいけません',m:'Tidak boleh ...',e:'ここで食べてはいけません。 / Tidak boleh makan di sini.'},
+  {p:'〜なければなりません',m:'Harus ...',e:'薬を飲まなければなりません。 / Harus minum obat.'},
+  {p:'〜ことができます',m:'Bisa ...',e:'日本語を話すことができます。 / Bisa berbicara Bahasa Jepang.'},
+  {p:'〜た後で',m:'Setelah ...',e:'食べた後で、歯を磨きます。 / Setelah makan, gosok gigi.'},
+  {p:'〜る前に',m:'Sebelum ...',e:'寝る前に本を読みます。 / Sebelum tidur membaca buku.'},
+  {p:'〜ながら',m:'Sambil ...',e:'音楽を聞きながら勉強します。 / Belajar sambil mendengar musik.'},
+  {p:'〜ので',m:'Karena ...',e:'雨なので、出かけません。 / Karena hujan, tidak keluar.'},
+];
+const kanjiList = [
+  ['日','にち/ひ','Hari/Matahari'],['月','つき/がつ','Bulan'],['火','か/ひ','Api'],
+  ['水','みず/すい','Air'],['木','き/もく','Pohon'],['金','かね/きん','Emas/Uang'],
+  ['土','つち/ど','Tanah'],['山','やま','Gunung'],['川','かわ','Sungai'],
+  ['人','ひと/じん','Orang'],['口','くち','Mulut'],['目','め','Mata'],
+  ['耳','みみ','Telinga'],['手','て','Tangan'],['足','あし','Kaki'],
+  ['力','ちから','Kekuatan'],['心','こころ','Hati'],['気','き','Semangat/Udara'],
+];
+const quizHira = [
+  {q:'あ',h:'Dibaca...',o:['a','i','u','e'],a:0},{q:'か',h:'Dibaca...',o:['sa','ka','na','ha'],a:1},
+  {q:'き',h:'Dibaca...',o:['ki','ni','mi','ri'],a:0},{q:'す',h:'Dibaca...',o:['tsu','fu','su','mu'],a:2},
+  {q:'て',h:'Dibaca...',o:['de','ne','te','he'],a:2},{q:'の',h:'Dibaca...',o:['mo','no','to','ko'],a:1},
+];
+const quizVocab = [
+  {q:'食べる',h:'Artinya...',o:['Minum','Pergi','Makan','Tidur'],a:2},
+  {q:'好き',h:'Artinya...',o:['Benci','Suka','Takut','Sedih'],a:1},
+  {q:'大きい',h:'Artinya...',o:['Kecil','Jauh','Besar','Cepat'],a:2},
+  {q:'行く',h:'Artinya...',o:['Datang','Pergi','Kembali','Berlari'],a:1},
+  {q:'新しい',h:'Artinya...',o:['Lama','Baru','Bagus','Jelek'],a:1},
+];
+const quizKanji = [
+  {q:'山',h:'Kanji ini berarti...',o:['Sungai','Laut','Gunung','Hutan'],a:2},
+  {q:'日',h:'Kanji ini berarti...',o:['Bulan','Bintang','Hari/Matahari','Api'],a:2},
+  {q:'人',h:'Kanji ini berarti...',o:['Binatang','Orang','Pohon','Batu'],a:1},
+  {q:'水',h:'Kanji ini berarti...',o:['Api','Tanah','Angin','Air'],a:3},
+  {q:'心',h:'Kanji ini berarti...',o:['Otak','Mata','Hati/Perasaan','Kaki'],a:2},
+];
+
+// ── PANELS ──────────────────────────────────────────────────────
+function openPanel(type) {
+  const map = {
+    hiragana:    { title:'Hiragana <span>ひらがな</span>', fn: () => renderCharGrid(hiragana) },
+    katakana:    { title:'Katakana <span>カタカナ</span>', fn: () => renderCharGrid(katakana) },
+    vocab:       { title:'Kosakata <span>語彙</span>',     fn: renderVocab },
+    grammar:     { title:'Tata Bahasa <span>文法 N5</span>',fn: () => renderGrammar(grammarBasic) },
+    'grammar-adv':{ title:'Tata Bahasa Lanjut <span>N4–N3</span>', fn: () => renderGrammar(grammarAdv) },
+    kanji:       { title:'Kanji <span>漢字</span>',         fn: renderKanji },
+    'quiz-hira': { title:'Quiz Hiragana <span>練習</span>', fn: () => buildQuiz(quizHira,'qh') },
+    'quiz-vocab':{ title:'Quiz Kosakata <span>練習</span>', fn: () => buildQuiz(quizVocab,'qv') },
+    'quiz-kanji':{ title:'Quiz Kanji <span>練習</span>',    fn: () => buildQuiz(quizKanji,'qk') },
+  };
+  const cfg = map[type]; if (!cfg) return;
+  document.getElementById('panelTitle').innerHTML = cfg.title;
+  document.getElementById('panelBody').innerHTML = cfg.fn();
+  document.getElementById('content-panel').classList.add('active');
+  document.getElementById('content-panel').scrollIntoView({ behavior: 'smooth' });
+  setupTabs();
+}
+
+function closePanel() { document.getElementById('content-panel').classList.remove('active'); }
+
+function renderCharGrid(data) {
+  return `<div class="char-grid">${data.map(([jp,ro]) =>
+    `<div class="char-cell"><span class="char-jp">${jp}</span><span class="char-ro">${ro}</span></div>`).join('')}</div>`;
+}
+
+function renderVocab() {
+  return `<div class="tabs"><div class="tab active" data-tab="vt1">Tabel</div><div class="tab" data-tab="vt2">Quiz</div></div>
+  <div class="tab-content active" id="vt1">
+    <table class="vocab-table"><thead><tr><th>Kanji/Kana</th><th>Romaji</th><th>Indonesia</th><th>Contoh</th></tr></thead>
+    <tbody>${vocabList.map(([jp,ro,id,ex]) =>
+      `<tr><td class="jp">${jp}</td><td class="ro">${ro}</td><td class="id">${id}</td><td class="ex">${ex}</td></tr>`).join('')}</tbody>
+    </table></div>
+  <div class="tab-content" id="vt2">${buildQuiz(quizVocab,'qvi')}</div>`;
+}
+
+function renderGrammar(data) {
+  return data.map(g => `<div class="gp"><div class="pat">${g.p}</div><div class="mea">${g.m}</div><div class="exa">${g.e}</div></div>`).join('');
+}
+
+function renderKanji() {
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:1px;background:rgba(200,150,12,.15);border:1px solid rgba(200,150,12,.15);">
+    ${kanjiList.map(([k,r,m]) => `<div style="background:#fef9ec;padding:20px 16px;text-align:center;">
+      <div style="font-family:'Noto Serif JP',serif;font-size:42px;color:var(--ink);">${k}</div>
+      <div style="font-size:11px;color:var(--vip-gold);margin:4px 0;letter-spacing:1px;">${r}</div>
+      <div style="font-size:11px;color:var(--ink-muted);">${m}</div></div>`).join('')}</div>`;
+}
+
+// ── QUIZ ENGINE ─────────────────────────────────────────────────
+const QS = {};
+function buildQuiz(data, id) {
+  QS[id] = { data, idx: 0, score: 0 };
+  return `<div class="quiz-section">
+    <div class="quiz-hdr"><div class="quiz-badge">練習</div><div class="quiz-title">Quiz</div><div class="quiz-prog" id="qp${id}">Soal 1 dari ${data.length}</div></div>
+    <div class="quiz-card" id="qc${id}">${renderQCard(id)}</div>
+    <div class="quiz-result" id="qr${id}">
+      <div class="result-score" id="rs${id}"></div><div class="result-lbl">dari ${data.length} soal</div>
+      <div class="result-msg" id="rm${id}"></div><br>
+      <button class="btn-restart" onclick="restartQ('${id}')">Ulangi Quiz</button>
+    </div></div>`;
+}
+function renderQCard(id) {
+  const s = QS[id], q = s.data[s.idx];
+  return `<span class="quiz-q">${q.q}</span><div class="quiz-qt">${q.h}</div>
+    <div class="quiz-fb" id="qf${id}"></div>
+    <div class="quiz-opts">${q.o.map((op,j) => `<button class="quiz-opt" id="qo${id}${j}" onclick="checkQ('${id}',${j})">${op}</button>`).join('')}</div>
+    <div class="quiz-nav"><button class="btn-next" id="qn${id}" style="display:none" onclick="nextQ('${id}')">Soal Berikutnya →</button></div>`;
+}
+function checkQ(id, j) {
+  const s = QS[id], q = s.data[s.idx];
+  for (let i = 0; i < q.o.length; i++) document.getElementById(`qo${id}${i}`).disabled = true;
+  const fb = document.getElementById(`qf${id}`);
+  if (j === q.a) { document.getElementById(`qo${id}${j}`).classList.add('correct'); fb.className='quiz-fb correct'; fb.textContent='正解！ Benar!'; s.score++; }
+  else { document.getElementById(`qo${id}${j}`).classList.add('wrong'); document.getElementById(`qo${id}${q.a}`).classList.add('correct'); fb.className='quiz-fb wrong'; fb.textContent=`Kurang tepat. Jawaban: ${q.o[q.a]}`; }
+  document.getElementById(`qn${id}`).style.display = 'inline-block';
+}
+function nextQ(id) {
+  QS[id].idx++;
+  if (QS[id].idx >= QS[id].data.length) { showQResult(id); return; }
+  document.getElementById(`qp${id}`).textContent = `Soal ${QS[id].idx+1} dari ${QS[id].data.length}`;
+  document.getElementById(`qc${id}`).innerHTML = renderQCard(id);
+}
+function showQResult(id) {
+  document.getElementById(`qc${id}`).style.display = 'none';
+  document.getElementById(`qr${id}`).style.display = 'block';
+  const p = QS[id].score / QS[id].data.length;
+  document.getElementById(`rs${id}`).textContent = `${QS[id].score}/${QS[id].data.length}`;
+  document.getElementById(`rm${id}`).textContent = p===1?'完璧！ Sempurna!':p>=.6?'良い！ Bagus, terus berlatih!':'がんばって！ Ayo belajar lagi!';
+}
+function restartQ(id) {
+  QS[id].idx = 0; QS[id].score = 0;
+  document.getElementById(`qc${id}`).style.display = '';
+  document.getElementById(`qc${id}`).innerHTML = renderQCard(id);
+  document.getElementById(`qr${id}`).style.display = 'none';
+  document.getElementById(`qp${id}`).textContent = `Soal 1 dari ${QS[id].data.length}`;
+}
+
+// ── UTILS ───────────────────────────────────────────────────────
+function setupTabs() {
+  document.querySelectorAll('.tab').forEach(tab => {
+    tab.onclick = () => {
+      const grp = tab.closest('.panel-inner') || tab.parentElement.parentElement;
+      grp.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      const id = tab.dataset.tab;
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      const tc = document.getElementById(id); if (tc) tc.classList.add('active');
+    };
+  });
+}
+
+function scrollTo(sel) {
+  const el = document.querySelector(sel); if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = `toast ${type} show`;
+  setTimeout(() => t.className = 'toast', 3000);
+}
+
+function initObserver() {
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        if (e.target.classList.contains('pb')) e.target.classList.add('animate');
+      }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-up, .pb').forEach(el => obs.observe(el));
+}
+
+function createPetals() {
+  const sc = document.getElementById('loginScreen');
+  for (let i = 0; i < 12; i++) {
+    const p = document.createElement('div'); p.className = 'petal';
+    p.style.cssText = `left:${Math.random()*100}%;animation-duration:${7+Math.random()*8}s;animation-delay:${Math.random()*10}s;width:${8+Math.random()*5}px;height:${8+Math.random()*5}px;`;
+    sc.appendChild(p);
+  }
+}
+</script>
+</body>
+</html>
